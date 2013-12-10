@@ -1,0 +1,8 @@
+{
+    "name": "ngimager",
+    "version": "0.0.1",
+    "main": "./ngimager.js",
+    "dependencies": {
+        "angular": ">=1.2.3"
+    }
+}

@@ -3,7 +3,7 @@ angular.module('ngimager',[])
 	.service('imager',function($window,$rootScope){
 		var window = $window;
 		var body = document.body;
-    var documentElement = document.documentElement;	
+		var documentElement = document.documentElement;	
 		// console.log(window.hasOwnProperty('onResize'))
 
 		var setInfo = function(){
@@ -29,19 +29,23 @@ angular.module('ngimager',[])
 
 		this.utils = {},
 		this.utils.foreach = function(){
+			
+		},
+		this.replaceArr = function(arr){
+		  return arr.sort(function(a,b){return a-b});
 		},
 		this.utils.getInlineCSS = function(){
 			if (element.__style) {
-            return element.__style;
-        }
-        var style = element.getAttribute("style") || "";
-        var regexp = /([^:\s]+)\s*:\s*([^;]+)/g;
-        var data = {};
-        style.replace(regexp, function(origin, key, value) {
-            data[key] = value.trim();
-        });
-        element.__style = data;
-        return data;
+				return element.__style;
+			}
+			var style = element.getAttribute("style") || "";
+			var regexp = /([^:\s]+)\s*:\s*([^;]+)/g;
+			var data = {};
+			style.replace(regexp, function(origin, key, value) {
+				data[key] = value.trim();
+			});
+			element.__style = data;
+			return data;
 		};
 		this.requestAnimationFrame = function(){
 			return(window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || setTimeout);
@@ -72,10 +76,29 @@ angular.module('ngimager',[])
 	}])
 	.directive('ngImgr',['imager','_resize', function(imager,_resize){
 		return {
-			replace: true,
 			restrict: "AE",
 			link: function (scope, elem, attr) {
-				console.log(_resize);
+				if(attr.ngSize){
+					var blob = attr.ngSize.split(',');		
+					blob = imager.replaceArr(blob);
+				}else{
+					var blob = []
+				}
+				var _cw = elem[0].clientWidth;
+				var _b = [];
+				angular.forEach(blob, function(v,k,i){
+					if(v > _cw){
+						if (!blob[k]){
+							_b.push(blob[0]);
+						}else{
+							_b.push(blob[k]);	
+						}
+					}
+				});
+				if(_b.length==0){
+					_b.push(blob[blob.length-1])	
+				}
+				scope.width = _b[0];
 			}
 		}
 	}])

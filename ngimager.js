@@ -1,40 +1,81 @@
 'use strict';
 angular.module('ngimager',[])
-	.service('imager',function($window){
+	.service('imager',function($window,$rootScope){
 		var window = $window;
+		var body = document.body;
+    var documentElement = document.documentElement;	
+		// console.log(window.hasOwnProperty('onResize'))
 
-		var imager = function (elem,imgr_){
-			
+		var setInfo = function(){
+			$rootScope.$$width = window.innerWidth || 0;
+			$rootScope.$$height = window.innerHeight || 0;
+			window.onresize = function(){
+				setInfo();
+			}
 		};
+
+		var getScrollHeight = function(){
+			return (body.scrollHeight || documentElement.scrollHeight || 0);
+		};
+		var getScrollTop = function(){
+			return (body.scrollTop || documentElement.scrollTop || 0);
+		};
+		
+		var init =function (){
+			getScrollHeight()
+			getScrollTop()
+			requestAnimationFrame(init)
+		};
+
 		this.utils = {},
 		this.utils.foreach = function(){
-
 		},
-		this.events = {},
-		this.events.EventEmitter = function(){
-
+		this.utils.getInlineCSS = function(){
+			if (element.__style) {
+            return element.__style;
+        }
+        var style = element.getAttribute("style") || "";
+        var regexp = /([^:\s]+)\s*:\s*([^;]+)/g;
+        var data = {};
+        style.replace(regexp, function(origin, key, value) {
+            data[key] = value.trim();
+        });
+        element.__style = data;
+        return data;
+		};
+		this.requestAnimationFrame = function(){
+			return(window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || setTimeout);
 		},
-		this.imager = imager,
-	
-		imager.prototype = new this.events.EventEmitter(),
-		imager.prototype.emitResizeEvent = function(){
-
-		}, 
-		imager.prototype.requestAnimationFrame = function(){
-			return(window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || setTimeout).bind(window);
-		},
-		imager.prototype.cancelAnimationFrame = function(){
-			return(window.cancelAnimationFrame || mozcancelAnimationFrame || window.webkitcancelAnimationFrame || window.mscancelAnimationFrame || setInterval).bind(window);
+		this.cancelAnimationFrame = function(){
+			return(window.cancelAnimationFrame || mozcancelAnimationFrame || window.webkitcancelAnimationFrame || window.mscancelAnimationFrame || window.msRequestAnimationFrame ||setInterval);
+		};
+		this.init = function(){
+			setInfo();
+			requestAnimationFrame(init)
 		}
+		this.init();
 	})
-	.directive('ngImgr',['imager',function(imager){
+	.factory('_resize',function(imager){
+		console.log(imager);
+	})
+	.factory('_scroll',function(imager){
+		console.log(imager);
+	})
+	.directive('ngImgrClick',['imager', function(){
+		return{
+			replace: true,
+			restrict: "AE",
+			link: function(scope, elem, attr){
+
+			}
+		}
+	}])
+	.directive('ngImgr',['imager','_resize', function(imager,_resize){
 		return {
 			replace: true,
 			restrict: "AE",
 			link: function (scope, elem, attr) {
-				console.log(imager)
-				
-		
+				console.log(_resize);
 			}
 		}
 	}])

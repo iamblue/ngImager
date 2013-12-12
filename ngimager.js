@@ -3,9 +3,7 @@ angular.module('ngimager',[])
 	.service('imager',function($window,$rootScope){
 		var window = $window;
 		var body = document.body;
-		var documentElement = document.documentElement;	
-		// console.log(window.hasOwnProperty('onResize'))
-
+		var documentElement = document.documentElement;
 		var setInfo = function(){
 			$rootScope.$$width = window.innerWidth || 0;
 			$rootScope.$$height = window.innerHeight || 0;
@@ -22,40 +20,27 @@ angular.module('ngimager',[])
 		};
 		
 		var init =function (){
-			getScrollHeight()
-			getScrollTop()
-			requestAnimationFrame(init)
+			getScrollHeight();
+			getScrollTop();
+			requestAnimationFrame(init);
 		};
 
 		this.utils = {},
 		this.utils.foreach = function(){
 			
-		},
+		};
 		this.replaceArr = function(arr){
 		  return arr.sort(function(a,b){return a-b});
-		},
-		this.utils.getInlineCSS = function(){
-			if (element.__style) {
-				return element.__style;
-			}
-			var style = element.getAttribute("style") || "";
-			var regexp = /([^:\s]+)\s*:\s*([^;]+)/g;
-			var data = {};
-			style.replace(regexp, function(origin, key, value) {
-				data[key] = value.trim();
-			});
-			element.__style = data;
-			return data;
 		};
 		this.requestAnimationFrame = function(){
 			return(window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || setTimeout);
-		},
+		};
 		this.cancelAnimationFrame = function(){
-			return(window.cancelAnimationFrame || mozcancelAnimationFrame || window.webkitcancelAnimationFrame || window.mscancelAnimationFrame || window.msRequestAnimationFrame ||setInterval);
+			return(window.cancelAnimationFrame || window.mozcancelAnimationFrame || window.webkitcancelAnimationFrame || window.mscancelAnimationFrame || window.msRequestAnimationFrame ||setInterval);
 		};
 		this.init = function(){
 			setInfo();
-			requestAnimationFrame(init)
+			requestAnimationFrame(init);
 		}
 		this.init();
 	})
@@ -70,13 +55,13 @@ angular.module('ngimager',[])
 			replace: true,
 			restrict: "AE",
 			link: function(scope, elem, attr){
-
+				console.log(scope+elem+attr);
 			}
-		}
+		};
 	}])
 	.directive('ngImgr',['imager','_resize', function(imager,_resize){
 		return {
-			restrict: "AE",
+			restrict: 'AE',
 			link: function (scope, elem, attr) {
 				if(attr.ngSize){
 					var blob = attr.ngSize.split(',');		
@@ -100,5 +85,5 @@ angular.module('ngimager',[])
 				}
 				scope.width = _b[0];
 			}
-		}
+		};
 	}])

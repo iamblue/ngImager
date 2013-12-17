@@ -62,6 +62,7 @@ angular.module('ngimager',[])
 	.directive('ngImgr',['imager','_resize', function(imager,_resize){
 		return {
 			restrict: 'AE',
+			replace:true,
 			link: function (scope, elem, attr) {
 				if(attr.ngSize){
 					var blob = attr.ngSize.split(',');		
